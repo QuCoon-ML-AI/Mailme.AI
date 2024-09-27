@@ -3,3 +3,4 @@ include/
 share/
 lib/
 *.env
+*.DS_Store

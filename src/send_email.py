@@ -4,7 +4,7 @@ from email.message import EmailMessage
 from pathlib import Path
 import os
 
-context = ssl.create_default_context()
+context = ssl.create_default_context()    
 
 def send_email(subject, body, receiver, attachment=False):
 
