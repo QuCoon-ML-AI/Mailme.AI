@@ -1,8 +1,8 @@
 import streamlit as st
-import time
 from src.generate_email import generate_email, generate_address
 from src.extract_receiver import all_emails
 from src.send_email import send_email
+from src.generate_letterhead import add_text_to_pdf
 
 st.set_page_config(page_title="Mailme.AI 🤖")
 
@@ -36,14 +36,17 @@ if "email_data" not in st.session_state:
 if "email_sent" not in st.session_state:
     st.session_state.email_sent = False
 
+if "full_address" not in st.session_state:
+    st.session_state.full_addresss = ""
+
 if st.button("Generate Email"):
     if all([style, letterhead_bool, email_details]):
         st.divider()
 
         # Generate letterhead if needed
-        address = ""
+        address = {}
         if txt:
-            address = "\n".join([value for key, value in generate_address(txt)])
+            address = generate_address(txt)
 
         # Generate email content
         email = generate_email(style, email_details)
@@ -82,6 +85,19 @@ if "subject" in st.session_state.email_data and "body" in st.session_state.email
         # Call send_email function
         status = send_email(confirm_subject, confirm_body, confirm_email_addresses.split(", "))
 
+        full_address = ""
+        full_address += st.session_state.email_data["address"]["address_line_1"] + "," + "\n"
+        full_address += st.session_state.email_data["address"]["city"] + ", " + st.session_state.email_data["address"]["state"]
+        try:
+            value = st.session_state.email_data["address"]["country"]
+            full_address += "," + "\n"
+            full_address += value + "."
+        except:
+            full_address += "."
+        full_address += st.session_state.email_data["address"]["time"]
+
+        st.session_state.full_address = full_address
+        add_text_to_pdf(full_address, confirm_subject, confirm_body)
         # Update session state if email is successfully sent
         if status:
             st.session_state.email_sent = True

@@ -1,6 +1,7 @@
 import os
 import json
 from openai import OpenAI
+from datetime import datetime
 
 # Get Configuration Settings
 from dotenv import load_dotenv
@@ -136,4 +137,6 @@ def generate_address(prompt):
 
     response = completion.choices[0].message.tool_calls[0].function.arguments
     response = json.loads(response)
+    current_date = datetime.now()
+    response["time"] = current_date.strftime("%B %d, %Y.")
     return response 
