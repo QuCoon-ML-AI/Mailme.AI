@@ -4,10 +4,13 @@ from email.message import EmailMessage
 from pathlib import Path
 import os
 
+from dotenv import load_dotenv
+load_dotenv() 
+
+
 context = ssl.create_default_context()    
 
 def send_email(subject, body, receiver, attachment=False):
-
     # Create a secure SSL context
     msg = EmailMessage()
 
