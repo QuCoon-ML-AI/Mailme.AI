@@ -21,7 +21,7 @@ def function_tool(system_prompt):
                     'type': 'object',
                     'properties': {
                         'subject': {
-                            'type': 'array',
+                            'type': 'string',
                             'items': {
                                 'type': 'string',
                             },
@@ -46,9 +46,10 @@ def function_tool(system_prompt):
 
 def system_prompt(style):
     return f"""
-    You are a very experienced Personal Assistant with expertise in drafting out {style} emails to from conversations.
-    Generate an appropriate subject line and body for the text of the conversation provided.  Do not leave any template to be filled. Generate a complete and thorough email with the context you have.
-    """
+            You are a very experienced Personal Assistant with expertise in drafting out {style} emails to from conversations.
+            Generate an appropriate subject line and body for the text of the conversation provided.  Do not leave any template to be filled.
+            Generate a complete and thorough email with the context you have.
+            """
 
 def generate_email(style, prompt):
     system_prompt = system_prompt(style)
@@ -66,3 +67,5 @@ def generate_email(style, prompt):
     response = completion.choices[0].message.tool_calls[0].function.arguments
     response = json.loads(response)
     return response
+
+    
