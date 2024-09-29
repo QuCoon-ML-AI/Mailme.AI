@@ -59,9 +59,10 @@ if st.button("Generate Email"):
                 except:
                     full_address += "," + "\n" + address["state"]
                     full_address += "." + "\n"
-                full_address += address["time"]
             except:
                 full_address = "\n".join(txt.split(","))
+                full_address += "." + "\n"
+            full_address += address["time"]
 
         # Generate email content
         email = generate_email(style, email_details)
