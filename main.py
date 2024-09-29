@@ -41,7 +41,7 @@ if "full_address" not in st.session_state:
 
 if st.button("Generate Email"):
     if all([style, letterhead_bool, email_details]):
-        st.divider()
+        # st.divider()
 
         # Generate letterhead if needed
         address = {}
@@ -62,10 +62,10 @@ if st.button("Generate Email"):
             "address": address
         }
 
-        # Display email inputs for confirmation
-        st.text_input("Recipients", st.session_state.email_data["email_addresses"])
-        st.text_input("Subject", st.session_state.email_data["subject"])
-        st.text_area("Body", st.session_state.email_data["body"], height=250)
+        # # Display email inputs for confirmation
+        # st.text_input("Recipients", st.session_state.email_data["email_addresses"])
+        # st.text_input("Subject", st.session_state.email_data["subject"])
+        # st.text_area("Body", st.session_state.email_data["body"], height=250)
 
     else:
         st.warning("Ensure you fill in all details.")
@@ -86,17 +86,19 @@ if "subject" in st.session_state.email_data and "body" in st.session_state.email
         status = send_email(confirm_subject, confirm_body, confirm_email_addresses.split(", "))
 
         full_address = ""
-        full_address += st.session_state.email_data["address"]["address_line_1"] + "," + "\n"
-        full_address += st.session_state.email_data["address"]["city"] + ", " + st.session_state.email_data["address"]["state"]
-        try:
-            value = st.session_state.email_data["address"]["country"]
-            full_address += "," + "\n"
-            full_address += value + "."
-        except:
-            full_address += "."
-        full_address += st.session_state.email_data["address"]["time"]
+        if letterhead_bool=="Yes":
+            full_address += st.session_state.email_data["address"]["address_line_1"] + "," + "\n"
+            full_address += st.session_state.email_data["address"]["city"] + ", " + st.session_state.email_data["address"]["state"]
+            try:
+                value = st.session_state.email_data["address"]["country"]
+                full_address += "," + "\n"
+                full_address += value + "."
+            except:
+                full_address += "."
+            full_address += st.session_state.email_data["address"]["time"]
 
-        st.session_state.full_address = full_address
+            st.session_state.full_address = full_address
+            
         add_text_to_pdf(full_address, confirm_subject, confirm_body)
         # Update session state if email is successfully sent
         if status:
