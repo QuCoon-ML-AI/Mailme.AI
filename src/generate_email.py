@@ -1,6 +1,7 @@
 import os
 import json
 from openai import OpenAI
+import openai
 from datetime import datetime
 
 # Get Configuration Settings
@@ -65,7 +66,7 @@ def function_tool_address(system_prompt):
                         },
                         'city': {
                             'type': 'string',
-                            'description': 'The city associated with the address.'
+                            'description': 'The city associated with the address. City is the immediate location after the house number details.'
                         },
                         'state': {
                             'type': 'string',

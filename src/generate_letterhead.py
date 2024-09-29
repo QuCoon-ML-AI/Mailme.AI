@@ -2,6 +2,7 @@ from PyPDF2 import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import io
+import textwrap
 
 # Function to add text to PDF
 def add_text_to_pdf(address, subject, body, input_pdf="./letterhead/base.pdf", output_pdf="./letterhead/populated.pdf"):
@@ -17,7 +18,7 @@ def add_text_to_pdf(address, subject, body, input_pdf="./letterhead/base.pdf", o
     can.setFont("Times-Bold", 14)  # Bold font for the subject
 
     # Calculate the width of the subject string
-    subject_width = can.stringWidth(subject, "Times-Bold", 14)
+    subject_width = can.stringWidth(subject.upper(), "Times-Bold", 14)
     
     # Center the subject text (x position is half the page width minus half the text width)
     page_width, page_height = letter[0], letter[1]  # Letter page width
@@ -25,18 +26,32 @@ def add_text_to_pdf(address, subject, body, input_pdf="./letterhead/base.pdf", o
     x_subject = (page_width - subject_width) / 2  # Centered position
 
     # Draw the centered subject
-    can.drawString(x_subject, 550, f"{subject}")
+    can.drawString(x_subject, 550, subject.upper())
     
     # Set font for normal text (address and body)
     can.setFont("Times-Roman", 12)
     
-    # Right-align the address
-    address_width = can.stringWidth(address, "Times-Roman", 12)
+
     # print(address_width)
-    can.drawString(page_width - address_width - 65, 650, address)  # Adjust x position for right-align
+    address_group = address.split("\n")
+
+    # Right-align the address
+    address_width = can.stringWidth(max(address_group, key=len), "Times-Roman", 12)
+
+    address_start = 650
+    for address_line in address_group:
+        can.drawString(page_width - address_width - 65, address_start, address_line)  # Adjust x position for right-align
+        address_start -= 15
     
     # Add the body text
-    can.drawString(65, 520, body)
+    body_group = body.split("\n")
+    start = 520
+    for line in body_group:
+        # print(textwrap.fill(line, width=100))
+        separate_parts = textwrap.fill(line, width=100).split("\n")
+        for section in separate_parts:
+            can.drawString(65, start, section)
+            start -= 15
     
     # Save the overlay PDF
     can.save()
