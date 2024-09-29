@@ -61,7 +61,7 @@ if st.button("Generate Email"):
                     full_address += "." + "\n"
                 full_address += address["time"]
             except:
-                full_address = "/n".join(txt.split(","))
+                full_address = "\n".join(txt.split(","))
 
         # Generate email content
         email = generate_email(style, email_details)
