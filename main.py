@@ -48,17 +48,20 @@ if st.button("Generate Email"):
         full_address = ""
         if txt:
             address = generate_address(txt)
-            full_address += address["address_line_1"] + "," + "\n"
-            full_address += address["city"]
             try:
-                value = address["country"]
-                full_address += ", " + address["state"]
-                full_address += "," + "\n"
-                full_address += value + "." + "\n"
+                full_address += address["address_line_1"] + "," + "\n"
+                full_address += address["city"]
+                try:
+                    value = address["country"]
+                    full_address += ", " + address["state"]
+                    full_address += "," + "\n"
+                    full_address += value + "." + "\n"
+                except:
+                    full_address += "," + "\n" + address["state"]
+                    full_address += "." + "\n"
+                full_address += address["time"]
             except:
-                full_address += "," + "\n" + address["state"]
-                full_address += "." + "\n"
-            full_address += address["time"]
+                full_address = "/n".join(txt.split(","))
 
         # Generate email content
         email = generate_email(style, email_details)
