@@ -49,12 +49,14 @@ if st.button("Generate Email"):
         if txt:
             address = generate_address(txt)
             full_address += address["address_line_1"] + "," + "\n"
-            full_address += address["city"] + ", " + address["state"]
+            full_address += address["city"]
             try:
                 value = address["country"]
+                full_address += ", " + address["state"]
                 full_address += "," + "\n"
                 full_address += value + "." + "\n"
             except:
+                full_address += "," + "\n" + address["state"]
                 full_address += "." + "\n"
             full_address += address["time"]
 
@@ -86,20 +88,33 @@ if "subject" in st.session_state.email_data and "body" in st.session_state.email
 
     confirm_recipient_address = ""
     if letterhead_bool=="Yes":
-        confirm_recipient_address = st.text_area("Confirm the Recipient Location address", st.session_state.email_data["address"], height=130)
+        
+        confirm_recipient_address = st.text_area("Confirm the Recipient's location/address", st.session_state.email_data["address"], height=130)
 
-    confirm_email_addresses = st.text_input("Confirm Recipients", st.session_state.email_data["email_addresses"])
+    confirm_email_addresses = st.text_input("Confirm Recipient(s)", st.session_state.email_data["email_addresses"])
     confirm_subject = st.text_input("Confirm Subject", st.session_state.email_data["subject"])
     confirm_body = st.text_area("Confirm Body", st.session_state.email_data["body"], height=250)
 
+    if letterhead_bool=="Yes":
+        add_text_to_pdf(confirm_recipient_address, confirm_subject, confirm_body)
+        with open("./letterhead/populated.pdf", "rb") as file:
+            st.download_button(
+                label = "Download and view letterhead",
+                data = file,
+                file_name = "letterhead.pdf",
+                mime = "text/pdf")
+    
     if st.button("Send email 📨"):
         # Log the button click to ensure it's being triggered
         # st.write("Send button clicked")  # This is for debugging in Streamlit
 
         # Call send_email function
-        status = send_email(confirm_subject, confirm_body, confirm_email_addresses.split(", "))
+        if letterhead_bool=="Yes":
+            status = send_email(confirm_subject, confirm_body, confirm_email_addresses.split(", "), attachment = True)
+        else:
+            status = send_email(confirm_subject, confirm_body, confirm_email_addresses.split(", "))
             
-        add_text_to_pdf(confirm_recipient_address, confirm_subject, confirm_body)
+        
         # Update session state if email is successfully sent
         if status:
             st.session_state.email_sent = True

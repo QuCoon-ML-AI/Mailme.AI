@@ -24,7 +24,7 @@ def send_email(subject, body, receiver, attachment=False):
             msg.add_attachment(
                         fp.read(),
                         maintype="image", subtype="png",
-                        filename=letter_head.name)
+                        filename="letterhead.pdf")
             
     with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as s:
         s.login(os.getenv('SENDER_EMAIL'), os.getenv('SENDER_PASSWORD'))

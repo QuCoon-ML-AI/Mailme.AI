@@ -66,7 +66,7 @@ def function_tool_address(system_prompt):
                         },
                         'city': {
                             'type': 'string',
-                            'description': 'The city associated with the address. City is the immediate location after the house number details.'
+                            'description': 'The immediate location information after the house number details. It all names before a recognised state.'
                         },
                         'state': {
                             'type': 'string',
@@ -127,7 +127,7 @@ def generate_address(prompt):
     system_prompt = system_prompt_address()
     generate_address_tool = function_tool_address(system_prompt)
     completion = client.chat.completions.create(
-        temperature=0.5,
+        temperature=0.7,
         model="gpt-4o",
         messages = [
             {"role": "system", "content": system_prompt},
