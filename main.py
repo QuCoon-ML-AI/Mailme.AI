@@ -58,7 +58,7 @@ if st.button("Generate Email"):
             except:
                 full_address += "," + "\n" + address["state"]
                 full_address += "." + "\n"
-            full_address += address["time"] + "."
+            full_address += address["time"]
 
         # Generate email content
         email = generate_email(style, email_details)
@@ -89,9 +89,9 @@ if "subject" in st.session_state.email_data and "body" in st.session_state.email
     confirm_recipient_address = ""
     if letterhead_bool=="Yes":
         
-        confirm_recipient_address = st.text_area("Confirm the Recipient's location/address", st.session_state.email_data["address"], height=130)
+        confirm_recipient_address = st.text_area("Confirm the recipient's location/address", st.session_state.email_data["address"], height=130)
 
-    confirm_email_addresses = st.text_input("Confirm Recipient(s)", st.session_state.email_data["email_addresses"])
+    confirm_email_addresses = st.text_input("Confirm recipient(s)", st.session_state.email_data["email_addresses"])
     confirm_subject = st.text_input("Confirm Subject", st.session_state.email_data["subject"])
     confirm_body = st.text_area("Confirm Body", st.session_state.email_data["body"], height=250)
 
