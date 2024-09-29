@@ -40,7 +40,7 @@ def add_text_to_pdf(address, subject, body, input_pdf="./letterhead/base.pdf", o
 
     address_start = 650
     for address_line in address_group:
-        can.drawString(page_width - address_width - 65, address_start, address_line)  # Adjust x position for right-align
+        can.drawString(65, address_start, address_line)  # Adjust x position for right-align
         address_start -= 15
     
     # Add the body text
